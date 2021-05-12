@@ -1,0 +1,12 @@
+- Change md5
+- Make view.php
+- Finish order.php
+- Make header and footer files
+- Make more includes
+
+- Change all queries prepared
+- Strip all input
+- Remove hidden text fields
+-Maybe make Cart.php
+
+- Update facemask.php
