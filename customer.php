@@ -1,22 +1,4 @@
-<?php include("includes/db.php"); include("includes/auth_session.php");?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="U8-Part2">
-  <meta name="author" content="abdofarwan">
-
-  <title>U8 - Hamza Store</title>
-  <!-- Bootstrap core CSS -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Custom styles for this template -->
-  <link href="css/shop-homepage.css" rel="stylesheet">
-</head>
-
-<body>
+<?php  require_once 'includes/header.php'; include("includes/db.php"); include("includes/auth_session.php"); require_once 'includes/resources.php'; $count=0;?>
 
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -39,7 +21,7 @@
             <a class="nav-link" href="shop.php">Shop</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<?php if($_SESSION["loggedIn"] != true){ echo 'login.php'; } else {echo 'logout.php';}?>"><?php if($_SESSION["loggedIn"] != true){ echo 'Login'; } else {echo 'Logout';}?></a>
+            <a class="nav-link" href="<?php if($_SESSION["isloggedin"] != true){ echo 'login.php'; } else {echo 'logout.php';}?>"><?php if($_SESSION["isloggedin"] != true){ echo 'Login'; } else {echo 'Logout';}?></a>
           </li>
         </ul>
       </div>
@@ -66,7 +48,7 @@
         <div class="list-group">
           <a href="customer.php" class="list-group-item">My Orders</a>
           <a href="shop.php" class="list-group-item">Shop</a>
-          <a class="list-group-item" href="<?php if($_SESSION["loggedIn"] != true){ echo 'login.php'; } else {echo 'logout.php';}?>"><?php if($_SESSION["loggedIn"] != true){ echo 'Login'; } else {echo 'Logout';}?></a>
+          <a class="list-group-item" href="<?php if($_SESSION["isloggedin"] != true){ echo 'login.php'; } else {echo 'logout.php';}?>"><?php if($_SESSION["isloggedin"] != true){ echo 'Login'; } else {echo 'Logout';}?></a>
         </div>
 
       </div>
@@ -79,26 +61,37 @@
 
           <hr><br>
          <div class="table">
-           <h3>Orders</h3>
+           <h3>My Orders</h3>
             <table class="table table-striped table-bordered">
               <tr>
-                   <th width="40%">OrderID</th>
-                   <th width="30%">Order Date</th>
+                   <th width="1%">OrderID</th>
+                   <th width="20%">Order Date</th>
                    <th width="20%">Total Price</th>
-                   <th width="5%">Action</th>
+                   <th width="10%">Status</th>
+                   <th width="10%">Action</th>
               </tr>
-              <tr>
-                   <td>12</td>
-                   <td>20 / 04 / 2021</td>
-                   <td>$ 2,300</td>
-                   <td><a href="view.php?orderid=<?php echo $values["order_id"]; ?>"><span class="text-info">View</span></a></td>
-              </tr>
-              <tr>
-                   <td>153</td>
-                   <td>21 / 04 / 2021</td>
-                   <td>$ 1,150</td>
-                   <td><a href="view.php?orderid=<?php echo $values["order_id"]; ?>"><span class="text-info">View</span></a></td>
-              </tr>
+
+              <?php
+                $userid = $_SESSION['sessionId'];
+                // query all orders my by specific user
+                $query = viewUserOrderByID($con, $userid);
+                // while loop to display all orders
+                while ($a = $query -> fetch_array()) {
+                    # code...
+                    $count +=1;
+                    ?>
+                    <tr>
+                    <td><?php echo $a["orderID"];?></td>
+                    <td><?php echo $a["orderDate"];?></td>
+                    <td>$<?php echo $a["orderTotal"];?></td>
+                    <td><?php echo $a["orderStatus"];?></td>
+                    <td><a href="invoice.php?orderid=<?php echo $a["orderID"];?>"><span class="text-info">Invoice</span></a></td>
+                    </tr>
+            <?php
+                }
+            ?>
+
+
             </table>
          </div>
 
@@ -116,11 +109,5 @@
   </div>
   <!-- /.container -->
 
+<?php  require_once 'includes/footer.php'; ?>
 
-  <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-</body>
-
-</html>

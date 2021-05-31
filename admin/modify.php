@@ -7,7 +7,18 @@ if($_SESSION['username'] !== 'admin'){
   header("Location: /Hamzastore/index.php");
 }
 
-?>
+// get ?productid=# from get request and give it to the viewProductID function
+$productid = "1";
+if(isset($_GET['productid'])){
+    $productid = htmlentities(strip_tags($_GET['productid']));
+}
+    $query = viewProductByID($con, $productid);
+    $product = $query -> fetch_array();
+    $vendorid = $product["vendorID"];
+    $vendorquery = viewVendorByID($con, $vendorid);
+    $productvendor = $vendorquery -> fetch_array();
+
+?> 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -66,7 +77,7 @@ if($_SESSION['username'] !== 'admin'){
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">
+            <a class="nav-link" aria-current="page" href="index.php">
               <span data-feather="home"></span>
               Dashboard
             </a>
@@ -104,7 +115,7 @@ if($_SESSION['username'] !== 'admin'){
           </a>
         </h6>
         <ul class="nav flex-column mb-2">
-          <li class="nav-item">
+        <li class="nav-item">
             <a class="nav-link" href="addproduct.php">
               <span data-feather="file-text"></span>
               Product
@@ -138,64 +149,54 @@ if($_SESSION['username'] !== 'admin'){
             <span data-feather="calendar"></span>
             This week
           </button>
-        </div> 
+        </div>
       </div>
 
-      <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-
-      <h2>Outstanding Payments</h2>
-      <div class="table-responsive">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th>#ID</th>
-              <th>FacemaskID/Name</th>
-              <th>Vendor / Address / Phone</th>
-              <th>Quantity</th>
-              <th>OrderTotal</th>
-              <th>CustomerID/Name</th>
-              <th>Order Date/Time</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-          <?php 
-                $query = viewAllUnpaidOrders($con);
+      <h2>Modifying Facemask with ID <?php echo $product["facemaskID"];?></h2>
+      <form class="row g-3" action="includes/modify.inc.php" method="POST">
+      <input type="hidden" name="facemaskID" value="<?php echo $product["facemaskID"];?>">
+  <div class="col-md-6">
+    <label for="facemaskName" class="form-label">Facemask Name</label>
+    <input type="text" class="form-control" id="facemaskName" placeholder="Nice Mask" name="facemaskName" value="<?php echo $product["facemaskName"];?>">
+  </div>
+  <div class="col-md-6">
+    <label for="facemaskPrice" class="form-label">Price</label>
+    <input type="text" class="form-control" id="facemaskPrice" placeholder="$145" name="facemaskPrice" value="<?php echo $product["facemaskPrice"];?>">
+  </div>
+  <div class="col-12">
+    <label for="facemaskDescription" class="form-label">Description</label>
+    <input type="text" class="form-control" id="facemaskDescription" placeholder="A very nice mask...." name="facemaskDescription" value="<?php echo $product["facemaskDescription"];?>">
+  </div>
+  <div class="col-md-6">
+    <label for="facemaskImg" class="form-label">Image URL</label>
+    <input type="text" class="form-control" id="facemaskImg" placeholder="Image URL" name="facemaskImg" value="<?php echo $product["facemaskImg"];?>">
+  </div>
+  <div class="col-md-4">
+    <label for="inputState" class="form-label">Vendor</label>
+    <select id="inputState" class="form-select" name="vendorID">
+      <option value="<?php echo $productvendor["vendorID"];?>" selected><?php echo $productvendor["vendorname"];?></option>
+      <?php 
+                $query = viewAllVendors($con);
                 $count = 0;
-                while ($order = $query -> fetch_array()) {
+                while ($vendor = $query -> fetch_array()) {
                     # code...
-                    $productid = $order["facemaskID"];
-                    $userid = $order["customerID"];
-
-                    // get product info from order
-                    $product_query = viewProductByID($con, $productid);
-                    $product = $product_query -> fetch_array();
-                    $vendorid = $product["vendorID"];
-    
-                    // get user info from order 
-                    $user_query = viewUserByID($con, $userid);
-                    $user = $user_query -> fetch_array();
-                    // get vendor info from order
-                    $vendor_query = viewVendorByID($con, $vendorid);
-                    $vendor = $vendor_query -> fetch_array();
-
                     $count +=1;
                     ?>
-                    <tr>
-                    <td><?php echo $order["orderID"];?></td>
-                    <td><?php echo $order["facemaskID"];?> ~ <?php echo $product["facemaskName"];?></td>
-                    <td><?php echo $vendor["vendorname"];?> - <?php echo $vendor["address"];?> - <?php echo $vendor["phone"];?></td>
-                    <td><?php echo $order["quantity"];?></td>
-                    <td>$<?php echo $order["orderTotal"];?></td>
-                    <td><?php echo $order["customerID"];?> ~ <?php echo $user["customerUsername"];?></td>
-                    <td><?php echo $order["orderDate"];?></td>
-                    <td><?php echo $order["orderStatus"];?></td>
-                    </tr>
+                <option value="<?php echo $vendor["vendorID"];?>"><?php echo $vendor["vendorname"];?></option>
             <?php
                 }
             ?>
-          </tbody>
-        </table>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label for="facemaskQuantity" class="form-label">Quantity Available</label>
+    <input type="text" class="form-control" id="facemaskQuantity" placeholder="17" name="facemaskQuantity" value="<?php echo $product["facemaskQuantity"];?>">
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Modify Info</button>
+  </div>
+</form>
+    
       </div>
     </main>
   </div>
@@ -205,7 +206,6 @@ if($_SESSION['username'] !== 'admin'){
   <!-- <script src="/Hamzastore/vendor/jquery/jquery.min.js"></script> -->
   <script src="https://getbootstrap.com/docs/5.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script><script src="js/dashboard.js"></script>
-
 </body>
 
 </html>

@@ -1,22 +1,4 @@
-<?php include("includes/db.php"); session_start();?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="U8-Part2">
-  <meta name="author" content="abdofarwan">
-
-  <title>U8 - Hamza Store</title>
-  <!-- Bootstrap core CSS -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Custom styles for this template -->
-  <link href="css/shop-homepage.css" rel="stylesheet">
-</head>
-
-<body>
+<?php require_once 'includes/header.php'; include("includes/db.php"); session_start();?>
 
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -39,7 +21,7 @@
             <a class="nav-link" href="shop.php">Shop</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<?php if($_SESSION["loggedIn"] != true){ echo 'login.php'; } else {echo 'logout.php';}?>"><?php if($_SESSION["loggedIn"] != true){ echo 'Login'; } else {echo 'Logout';}?></a>
+            <a class="nav-link" href="<?php if(isset($_SESSION["isloggedin"]) != true){ echo 'login.php'; } else {echo 'logout.php';}?>"><?php if(isset($_SESSION["isloggedin"]) != true){ echo 'Login'; } else {echo 'Logout';}?></a>
           </li>
         </ul>
       </div>
@@ -58,7 +40,7 @@
         <div class="list-group">
           <a href="customer.php" class="list-group-item">My Orders</a>
           <a href="shop.php" class="list-group-item">Shop</a>
-          <a class="list-group-item" href="<?php if($_SESSION["loggedIn"] != true){ echo 'login.php'; } else {echo 'logout.php';}?>"><?php if($_SESSION["loggedIn"] != true){ echo 'Login'; } else {echo 'Logout';}?></a>
+          <a class="list-group-item" href="<?php if(isset($_SESSION["isloggedin"]) != true){ echo 'login.php'; } else {echo 'logout.php';}?>"><?php if(isset($_SESSION["isloggedin"]) != true){ echo 'Login'; } else {echo 'Logout';}?></a>
         </div>
 
       </div>
@@ -86,7 +68,7 @@
                 <p class="card-text"><?php echo $row["facemaskDescription"]; ?></p>
               </div>
               <div class="card-footer">
-                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                <small class="" style="color:orange; "><?php $star="&#9733;"; echo str_repeat($star, rand(3, 5)); ?></small>
               </div>
             </div>
           </div>
@@ -106,19 +88,5 @@
 
   </div>
   <!-- /.container -->
+  <?php  require_once 'includes/footer.php'; ?>
 
-  <!-- Footer -->
-  <footer class="py-5 bg-dark">
-    <div class="container">
-      <p class="m-0 text-center text-white">Copyright &copy; Hamza Store 2021</p>
-    </div>
-    <!-- /.container -->
-  </footer>
-
-  <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-</body>
-
-</html>

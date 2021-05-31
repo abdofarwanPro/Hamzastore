@@ -66,13 +66,13 @@ if($_SESSION['username'] !== 'admin'){
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">
+            <a class="nav-link" aria-current="page" href="index.php">
               <span data-feather="home"></span>
               Dashboard
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="orders.php">
+            <a class="nav-link active" href="#">
               <span data-feather="file"></span>
               Orders
             </a>
@@ -104,7 +104,7 @@ if($_SESSION['username'] !== 'admin'){
           </a>
         </h6>
         <ul class="nav flex-column mb-2">
-          <li class="nav-item">
+        <li class="nav-item">
             <a class="nav-link" href="addproduct.php">
               <span data-feather="file-text"></span>
               Product
@@ -138,12 +138,10 @@ if($_SESSION['username'] !== 'admin'){
             <span data-feather="calendar"></span>
             This week
           </button>
-        </div> 
+        </div>
       </div>
 
-      <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-
-      <h2>Outstanding Payments</h2>
+      <h2>All Orders</h2>
       <div class="table-responsive">
         <table class="table table-striped table-sm">
           <thead>
@@ -155,12 +153,13 @@ if($_SESSION['username'] !== 'admin'){
               <th>OrderTotal</th>
               <th>CustomerID/Name</th>
               <th>Order Date/Time</th>
+              <th>Discount</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody>
           <?php 
-                $query = viewAllUnpaidOrders($con);
+                $query = viewAllOrders($con);
                 $count = 0;
                 while ($order = $query -> fetch_array()) {
                     # code...
@@ -189,6 +188,7 @@ if($_SESSION['username'] !== 'admin'){
                     <td>$<?php echo $order["orderTotal"];?></td>
                     <td><?php echo $order["customerID"];?> ~ <?php echo $user["customerUsername"];?></td>
                     <td><?php echo $order["orderDate"];?></td>
+                    <td><?php echo $order["discount"];?></td>
                     <td><?php echo $order["orderStatus"];?></td>
                     </tr>
             <?php

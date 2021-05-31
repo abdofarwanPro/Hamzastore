@@ -1,3 +1,10 @@
+<?php
+session_start();
+if(isset($_SESSION["username"])) {
+    header("Location: shop.php");
+    exit();
+} else {
+?>
 
 <!doctype html>
 <html lang="en">
@@ -71,34 +78,7 @@
 
   <body class="text-center">
 
-    <?php
-        require('includes/db.php');
-        // When form submitted, insert values into the database.
-        if (isset($_REQUEST['username'])) {
-            // removes backslashes
-            $username = stripslashes($_REQUEST['username']);
-            //escapes special characters in a string
-            $username = mysqli_real_escape_string($con, $username);
-            $email    = stripslashes($_REQUEST['email']);
-            $email    = mysqli_real_escape_string($con, $email);
-            $address    = stripslashes($_REQUEST['address']);
-            $address   = mysqli_real_escape_string($con, $address);
-            $password = stripslashes($_REQUEST['password']);
-            $password = mysqli_real_escape_string($con, $password);
-            $query    = "INSERT into `customers` (customerUsername, customerPassword, customerEmail, customerAddress)
-                         VALUES ('$username', '" . md5($password) . "', '$email', '$address')";
-            $result   = mysqli_query($con, $query);
-            if ($result) {
-                header('Location: /U4/login.php');
-            } else {
-                echo "<div class='form'>
-                      <h3 class='h3 mb-3 font-weight-normal'>Required fields are missing.</h3><br/>
-                      <p class='link'>Click here to <a href='registration.php'>registration</a> again.</p>
-                      </div>";
-            }
-        } else {
-    ?>
-    <form class="form-signin" method="POST" action="">
+    <form class="form-signin" method="POST" action="includes/register.inc.php">
     <h1 class="h3 mb-3 font-weight-normal">Please Register to access Hamza Store</h1>
     <label for="inputUser" class="sr-only">Username</label>
     <input name="username" type="text" id="inputUser" class="form-control" placeholder="Username" required autofocus>
@@ -116,10 +96,8 @@
     <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
     <p class="mt-5 mb-3 text-muted">Hamza Store &copy; 2021</p>
   </form>
-    <?php
-        }
-    ?>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<?php }?>

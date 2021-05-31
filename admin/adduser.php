@@ -66,7 +66,7 @@ if($_SESSION['username'] !== 'admin'){
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">
+            <a class="nav-link" aria-current="page" href="index.php">
               <span data-feather="home"></span>
               Dashboard
             </a>
@@ -104,14 +104,14 @@ if($_SESSION['username'] !== 'admin'){
           </a>
         </h6>
         <ul class="nav flex-column mb-2">
-          <li class="nav-item">
+        <li class="nav-item">
             <a class="nav-link" href="addproduct.php">
               <span data-feather="file-text"></span>
               Product
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="adduser.php">
+            <a class="nav-link active" href="adduser.php">
               <span data-feather="file-text"></span>
               User
             </a>
@@ -141,61 +141,39 @@ if($_SESSION['username'] !== 'admin'){
         </div> 
       </div>
 
-      <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
 
-      <h2>Outstanding Payments</h2>
-      <div class="table-responsive">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th>#ID</th>
-              <th>FacemaskID/Name</th>
-              <th>Vendor / Address / Phone</th>
-              <th>Quantity</th>
-              <th>OrderTotal</th>
-              <th>CustomerID/Name</th>
-              <th>Order Date/Time</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-          <?php 
-                $query = viewAllUnpaidOrders($con);
-                $count = 0;
-                while ($order = $query -> fetch_array()) {
-                    # code...
-                    $productid = $order["facemaskID"];
-                    $userid = $order["customerID"];
+      <h2>Add User</h2>
+      <form class="row g-3" action="includes/adduser.inc.php" method="POST">
+  <div class="col-md-6">
+    <label for="inputEmail4" class="form-label">Email</label>
+    <input type="email" class="form-control" id="inputEmail4" name="email" placeholder="example@gmail.com">
+  </div>
+  <div class="col-md-6">
+    <label for="inputPassword4" class="form-label">Password</label>
+    <input type="password" class="form-control" id="inputPassword4" name="password" placeholder="************">
+  </div>
+  <div class="col-12">
+    <label for="inputAddress" class="form-label">Address</label>
+    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address">
+  </div>
+  <div class="col-md-6">
+    <label for="Username" class="form-label">Username</label>
+    <input type="text" class="form-control" id="Username" name="username" placeholder="exampleusername">
+  </div>
+  <div class="col-md-6">
+    <label for="inputState" class="form-label">Role</label>
+    <select id="inputState" class="form-select" name="role">
+      <option selected>Choose...</option>
+      <option value="admin">admin</option>
+      <option value="user">user</option>
 
-                    // get product info from order
-                    $product_query = viewProductByID($con, $productid);
-                    $product = $product_query -> fetch_array();
-                    $vendorid = $product["vendorID"];
+    </select>
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Add user</button>
+  </div>
+</form>
     
-                    // get user info from order 
-                    $user_query = viewUserByID($con, $userid);
-                    $user = $user_query -> fetch_array();
-                    // get vendor info from order
-                    $vendor_query = viewVendorByID($con, $vendorid);
-                    $vendor = $vendor_query -> fetch_array();
-
-                    $count +=1;
-                    ?>
-                    <tr>
-                    <td><?php echo $order["orderID"];?></td>
-                    <td><?php echo $order["facemaskID"];?> ~ <?php echo $product["facemaskName"];?></td>
-                    <td><?php echo $vendor["vendorname"];?> - <?php echo $vendor["address"];?> - <?php echo $vendor["phone"];?></td>
-                    <td><?php echo $order["quantity"];?></td>
-                    <td>$<?php echo $order["orderTotal"];?></td>
-                    <td><?php echo $order["customerID"];?> ~ <?php echo $user["customerUsername"];?></td>
-                    <td><?php echo $order["orderDate"];?></td>
-                    <td><?php echo $order["orderStatus"];?></td>
-                    </tr>
-            <?php
-                }
-            ?>
-          </tbody>
-        </table>
       </div>
     </main>
   </div>

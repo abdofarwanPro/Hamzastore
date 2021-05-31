@@ -4,7 +4,7 @@
 // check if username is admin
 if($_SESSION['username'] !== 'admin'){
   // isn't admin, redirect them to a different page
-  header("Location: /Hamzastore/index.php");
+  header("Location: /Hamzastore/login.php");
 }
 
 ?>
@@ -66,7 +66,7 @@ if($_SESSION['username'] !== 'admin'){
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">
+            <a class="nav-link" aria-current="page" href="index.php">
               <span data-feather="home"></span>
               Dashboard
             </a>
@@ -104,8 +104,8 @@ if($_SESSION['username'] !== 'admin'){
           </a>
         </h6>
         <ul class="nav flex-column mb-2">
-          <li class="nav-item">
-            <a class="nav-link" href="addproduct.php">
+        <li class="nav-item">
+            <a class="nav-link active" href="addproduct.php">
               <span data-feather="file-text"></span>
               Product
             </a>
@@ -141,61 +141,49 @@ if($_SESSION['username'] !== 'admin'){
         </div> 
       </div>
 
-      <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-
-      <h2>Outstanding Payments</h2>
-      <div class="table-responsive">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th>#ID</th>
-              <th>FacemaskID/Name</th>
-              <th>Vendor / Address / Phone</th>
-              <th>Quantity</th>
-              <th>OrderTotal</th>
-              <th>CustomerID/Name</th>
-              <th>Order Date/Time</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-          <?php 
-                $query = viewAllUnpaidOrders($con);
+      <h2>Add Facemask</h2>
+      <form class="row g-3" action="includes/addproduct.inc.php" method="POST">
+  <div class="col-md-6">
+    <label for="facemaskName" class="form-label">Facemask Name</label>
+    <input type="text" class="form-control" id="facemaskName" placeholder="Nice Mask" name="facemaskName">
+  </div>
+  <div class="col-md-6">
+    <label for="facemaskPrice" class="form-label">Price</label>
+    <input type="text" class="form-control" id="facemaskPrice" placeholder="$145" name="facemaskPrice">
+  </div>
+  <div class="col-12">
+    <label for="facemaskDescription" class="form-label">Description</label>
+    <input type="text" class="form-control" id="facemaskDescription" placeholder="A very nice mask...." name="facemaskDescription">
+  </div>
+  <div class="col-md-6">
+    <label for="facemaskImg" class="form-label">Image URL</label>
+    <input type="text" class="form-control" id="facemaskImg" placeholder="Image URL" name="facemaskImg">
+  </div>
+  <div class="col-md-4">
+    <label for="inputState" class="form-label">Vendor</label>
+    <select id="inputState" class="form-select" name="vendorID">
+      <option selected>Choose...</option>
+      <?php 
+                $query = viewAllVendors($con);
                 $count = 0;
-                while ($order = $query -> fetch_array()) {
+                while ($vendor = $query -> fetch_array()) {
                     # code...
-                    $productid = $order["facemaskID"];
-                    $userid = $order["customerID"];
-
-                    // get product info from order
-                    $product_query = viewProductByID($con, $productid);
-                    $product = $product_query -> fetch_array();
-                    $vendorid = $product["vendorID"];
-    
-                    // get user info from order 
-                    $user_query = viewUserByID($con, $userid);
-                    $user = $user_query -> fetch_array();
-                    // get vendor info from order
-                    $vendor_query = viewVendorByID($con, $vendorid);
-                    $vendor = $vendor_query -> fetch_array();
-
                     $count +=1;
                     ?>
-                    <tr>
-                    <td><?php echo $order["orderID"];?></td>
-                    <td><?php echo $order["facemaskID"];?> ~ <?php echo $product["facemaskName"];?></td>
-                    <td><?php echo $vendor["vendorname"];?> - <?php echo $vendor["address"];?> - <?php echo $vendor["phone"];?></td>
-                    <td><?php echo $order["quantity"];?></td>
-                    <td>$<?php echo $order["orderTotal"];?></td>
-                    <td><?php echo $order["customerID"];?> ~ <?php echo $user["customerUsername"];?></td>
-                    <td><?php echo $order["orderDate"];?></td>
-                    <td><?php echo $order["orderStatus"];?></td>
-                    </tr>
+                <option value="<?php echo $vendor["vendorID"];?>"><?php echo $vendor["vendorname"];?></option>
             <?php
                 }
             ?>
-          </tbody>
-        </table>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label for="facemaskQuantity" class="form-label">Quantity Available</label>
+    <input type="text" class="form-control" id="facemaskQuantity" placeholder="17" name="facemaskQuantity">
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Add Facemask</button>
+  </div>
+</form>
       </div>
     </main>
   </div>

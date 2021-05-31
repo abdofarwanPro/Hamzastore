@@ -1,3 +1,12 @@
+<?php
+session_start();
+if(isset($_SESSION["username"])) {
+    header("Location: shop.php");
+    exit();
+} else {
+?>
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -58,34 +67,7 @@
   </nav>
 
   <body class="text-center">
-    <?php
-        require('includes/db.php');
-        session_start();
-
-        if (isset($_POST['username'])) {
-            $username = stripslashes($_REQUEST['username']);    // removes backslashes
-            $username = mysqli_real_escape_string($con, $username);
-            $password = stripslashes($_REQUEST['password']);
-            $password = mysqli_real_escape_string($con, $password);
-            // Check user is exist in the database
-            $query    = "SELECT * FROM `customers` WHERE customerUsername='$username'
-                         AND customerPassword='" . md5($password) . "'";
-            $result = mysqli_query($con, $query) or die(mysql_error());
-            $rows = mysqli_num_rows($result);
-            if ($rows == 1) {
-                $_SESSION['username'] = $username;
-                $_SESSION['loggedIn'] = true;
-                // Redirect to user dashboard page
-                header("Location: customer.php");
-            } else {
-                echo "<div class='form'>
-                      <h3>Incorrect Username/password.</h3><br/>
-                      <p class='link'>Click here to <a href='login.php'>Login</a> again.</p>
-                      </div>";
-            }
-        } else {
-    ?>
-    <form class="form-signin" method="post" name="login">
+    <form class="form-signin" method="POST" action="includes/login.inc.php">
   <h1 class="h3 mb-3 font-weight-normal">Please sign in to access Hamza Store</h1>
   <label for="inputUser" class="sr-only">Email address</label>
   <input name="username" type="text" id="inputUser" class="form-control" placeholder="Username" required autofocus><br>
@@ -96,13 +78,13 @@
       Don't Have an Account? <a href="register.php">Register here</a>
     </label>
   </div>
-  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+  <button class="btn btn-lg btn-primary btn-block" name="submit" type="submit">Sign in</button>
   <p class="mt-5 mb-3 text-muted">Hamza Store &copy; 2021</p>
 </form>
-    <?php
-        }
-    ?>
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+<?php } ?>
+

@@ -1,60 +1,4 @@
-<?php include("includes/db.php"); include("includes/auth_session.php");
-
-if(isset($_POST["add_to_cart"])) {
-      if(isset($_SESSION["cart"])) {
-           $item_array_id = array_column($_SESSION["cart"], "mask_id");
-           if(!in_array($_GET["id"], $item_array_id)){
-                $count = count($_SESSION["cart"]);
-                $item_array = array(
-                     'mask_id'       =>  $_GET["id"],
-                     'mask_name'     =>  $_POST["hidden_name"],
-                     'mask_price'    =>  $_POST["hidden_price"],
-                     'mask_quantity' =>  $_POST["quantity"]);
-                $_SESSION["cart"][$count] = $item_array;
-           } else {
-                echo '<script>alert("Item is already in the cart")</script>';
-                echo '<script>window.location="shop.php"</script>';
-           }
-      } else {
-           $item_array = array(
-                'mask_id'       =>   $_GET["id"],
-                'mask_name'     =>   $_POST["hidden_name"],
-                'mask_price'    =>   $_POST["hidden_price"],
-                'mask_quantity' =>   $_POST["quantity"]
-           );
-           $_SESSION["cart"][0] = $item_array;
-      }
- }
- if(isset($_GET["action"])) {
-      if($_GET["action"] == "delete") {
-           foreach($_SESSION["cart"] as $keys => $values) {
-                if($values["mask_id"] == $_GET["id"]){
-                     unset($_SESSION["cart"][$keys]);
-                     echo '<script>window.location="shop.php"</script>';
-                }
-           }
-      }
- }
- ?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="U8-Part2">
-  <meta name="author" content="abdofarwan">
-
-  <title>U8 - Hamza Store</title>
-  <!-- Bootstrap core CSS -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Custom styles for this template -->
-  <link href="css/shop-homepage.css" rel="stylesheet">
-</head>
-
-<body>
+<?php require_once 'includes/header.php'; include("includes/db.php"); include("includes/auth_session.php");?>
 
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -77,7 +21,7 @@ if(isset($_POST["add_to_cart"])) {
             <span class="sr-only">(current)</span>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<?php if($_SESSION["loggedIn"] != true){ echo 'login.php'; } else {echo 'logout.php';}?>"><?php if($_SESSION["loggedIn"] != true){ echo 'Login'; } else {echo 'Logout';}?></a>
+            <a class="nav-link" href="<?php if($_SESSION["isloggedin"] != true){ echo 'login.php'; } else {echo 'logout.php';}?>"><?php if($_SESSION["isloggedin"] != true){ echo 'Login'; } else {echo 'Logout';}?></a>
           </li>
         </ul>
       </div>
@@ -100,7 +44,7 @@ if(isset($_POST["add_to_cart"])) {
         <div class="list-group">
           <a href="customer.php" class="list-group-item">My Orders</a>
           <a href="shop.php" class="list-group-item">Shop</a>
-          <a class="list-group-item" href="<?php if($_SESSION["loggedIn"] != true){ echo 'login.php'; } else {echo 'logout.php';}?>"><?php if($_SESSION["loggedIn"] != true){ echo 'Login'; } else {echo 'Logout';}?></a>
+          <a class="list-group-item" href="<?php if($_SESSION["isloggedin"] != true){ echo 'login.php'; } else {echo 'logout.php';}?>"><?php if($_SESSION["isloggedin"] != true){ echo 'Login'; } else {echo 'Logout';}?></a>
         </div>
 
       </div>
@@ -122,17 +66,17 @@ if(isset($_POST["add_to_cart"])) {
               <a href="#"><img class="card-img-top" src="<?php echo $row["facemaskImg"]; ?>" alt=""></a>
               <div class="card-body">
                 <h4 class="card-title">
-                  <a href="shop.php"><?php echo $row["facemaskName"]; ?></a>
+                 <?php echo $row["facemaskName"]; ?>
                 </h4>
                 <h5>$<?php echo $row["facemaskPrice"]; ?></h5>
                 <p class="card-text"><?php echo $row["facemaskDescription"]; ?></p>
               </div>
               <div class="card-footer">
-                <form class="" action="shop.php?action=add&id=<?php echo $row["facemaskID"]; ?>" method="post">
+                <form class="" action="order.php" method="POST">
                   <input type="number" name="quantity" value="1" min="1" max="<?php echo $row["facemaskQuantity"]; ?>">
-                  <input type="hidden" name="hidden_name" value="<?php echo $row["facemaskName"]; ?>">
-                  <input type="hidden" name="hidden_price" value="<?php echo $row["facemaskPrice"]; ?>">
-                  <button type="submit" name="add_to_cart" class="btn btn-primary btn-sm">Add to Cart</button>
+                  <input type="hidden" name="productid" value="<?php echo $row["facemaskID"];?>">
+                  <input type="hidden" name="userid" value="<?php echo $_SESSION['sessionId'];?>">
+                  <button type="submit" name="add_to_cart" class="btn btn-primary btn-sm">Buy now</button>
                 </form>
               </div>
             </div>
@@ -141,44 +85,6 @@ if(isset($_POST["add_to_cart"])) {
    }
 }
       ?>
-    <!-- The Cart  -->
-    <hr><br>
-   <div class="table">
-     <h3>Cart</h3>
-      <table>
-        <tr>
-             <th width="40%">Item Name</th>
-             <th width="10%">Quantity</th>
-             <th width="20%">Price</th>
-             <th width="15%">Total</th>
-             <th width="5%">Action</th>
-        </tr>
-        <?php
-        if(!empty($_SESSION["cart"])){
-             $total = 0;
-             foreach($_SESSION["cart"] as $keys => $values) {
-        ?>
-        <tr>
-             <td><?php echo $values["mask_name"]; ?></td>
-             <td><?php echo $values["mask_quantity"]; ?></td>
-             <td>$ <?php echo $values["mask_price"]; ?></td>
-             <td>$ <?php echo number_format($values["mask_quantity"] * $values["mask_price"], 2); ?></td>
-             <td><a href="shop.php?action=delete&id=<?php echo $values["mask_id"]; ?>"><span class="text-danger">Remove</span></a></td>
-        </tr>
-        <?php
-               $total = $total + ($values["mask_quantity"] * $values["mask_price"]);
-             }
-        ?>
-        <tr>
-             <td colspan="3" align="right">Total</td>
-             <td align="right">$ <?php echo number_format($total, 2); ?></td>
-             <td><button type="button" class="btn btn-success btn-sm">Order</button></td>
-        </tr>
-        <?php
-        }
-        ?>
-      </table>
-   </div>
 
    <!-- End of Cart -->
 
@@ -195,18 +101,4 @@ if(isset($_POST["add_to_cart"])) {
   </div>
   <!-- /.container -->
 
-  <!-- Footer -->
-  <footer class="py-5 bg-dark">
-    <div class="container">
-      <p class="m-0 text-center text-white">Copyright &copy; Hamza Store 2021</p>
-    </div>
-    <!-- /.container -->
-  </footer>
-
-  <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-</body>
-
-</html>
+<?php require_once 'includes/footer.php'; ?>
