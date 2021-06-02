@@ -21,7 +21,7 @@ if($_SESSION['username'] !== 'admin'){
 
   <title>U8 - Hamza Store</title>
   <!-- Bootstrap core CSS -->
-  <link href="https://getbootstrap.com/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="vendor/bootstrap/5.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Custom styles for this template -->
 </head>
 <body>
@@ -155,6 +155,7 @@ if($_SESSION['username'] !== 'admin'){
               <th>Order Date/Time</th>
               <th>Discount</th>
               <th>Status</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -190,6 +191,8 @@ if($_SESSION['username'] !== 'admin'){
                     <td><?php echo $order["orderDate"];?></td>
                     <td><?php echo $order["discount"];?></td>
                     <td><?php echo $order["orderStatus"];?></td>
+                    <td><a href="delete.php?orderid=<?php echo $order["orderID"];?>"><button type="button" class="btn btn-outline-danger btn-sm">Delete</button></a></td>
+
                     </tr>
             <?php
                 }
@@ -203,8 +206,8 @@ if($_SESSION['username'] !== 'admin'){
 
   <!-- Bootstrap core JavaScript -->
   <!-- <script src="/Hamzastore/vendor/jquery/jquery.min.js"></script> -->
-  <script src="https://getbootstrap.com/docs/5.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script><script src="js/dashboard.js"></script>
+  <script src="vendor/bootstrap/5.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="vendor/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script><script src="js/dashboard.js"></script>
 
 </body>
 

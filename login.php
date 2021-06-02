@@ -1,9 +1,18 @@
 <?php
 session_start();
+$alert = "";
 if(isset($_SESSION["username"])) {
     header("Location: shop.php");
     exit();
 } else {
+if(isset($_GET['error'])){
+    $error = htmlentities(strip_tags($_GET['error']));
+    if ($error == "nouser") {
+      $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert"><strong>Username doesn\'t exist!</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+    } elseif ($error == "wrongpass") {
+      $alert = '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Incorrect Password!</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+    }
+}
 ?>
 
 
@@ -69,6 +78,7 @@ if(isset($_SESSION["username"])) {
   <body class="text-center">
     <form class="form-signin" method="POST" action="includes/login.inc.php">
   <h1 class="h3 mb-3 font-weight-normal">Please sign in to access Hamza Store</h1>
+  <?php echo $alert; ?>
   <label for="inputUser" class="sr-only">Email address</label>
   <input name="username" type="text" id="inputUser" class="form-control" placeholder="Username" required autofocus><br>
   <label for="inputPassword" class="sr-only">Password</label>

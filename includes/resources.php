@@ -76,6 +76,18 @@
         $sql = "DELETE FROM products WHERE facemaskID = $facemaskID";
         return $con -> query($sql);
     }
+    function deleteOrder($con, $orderID){
+        $sql = "DELETE FROM orders WHERE orderID = $orderID";
+        return $con -> query($sql);
+    }
+    function deleteCustomer($con, $customerID){
+        $sql = "DELETE FROM customers WHERE customerID = $customerID";
+        return $con -> query($sql);
+    }
+    function deleteVendor($con, $vendorID){
+        $sql = "DELETE FROM vendors WHERE vendorID = $vendorID";
+        return $con -> query($sql);
+    }
     function updateStatus($con,$orderID, $orderStatus){
         $sql = "UPDATE orders SET orderStatus = 'Paid' WHERE orderID = $orderID";
         return $con -> query($sql);
