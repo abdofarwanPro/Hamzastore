@@ -54,7 +54,7 @@
       <br>
         <div class="row">
           <?php
-          $query = "SELECT * FROM products ORDER BY facemaskID ASC";
+          $query = "SELECT * FROM products WHERE facemaskQuantity > 0 ORDER BY facemaskID ";
           $result = mysqli_query($con , $query);
           if (mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_array($result)) {

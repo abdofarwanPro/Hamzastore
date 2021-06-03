@@ -88,8 +88,12 @@
         $sql = "DELETE FROM vendors WHERE vendorID = $vendorID";
         return $con -> query($sql);
     }
-    function updateStatus($con,$orderID, $orderStatus){
+    function updateOrderStatus($con,$orderID, $orderStatus){
         $sql = "UPDATE orders SET orderStatus = 'Paid' WHERE orderID = $orderID";
+        return $con -> query($sql);
+    }
+    function decreaseFaceMaskQuantity($con,$newFacemaskQuantity,$productid){
+        $sql = "UPDATE products SET facemaskQuantity = $newFacemaskQuantity WHERE facemaskID = $productid";
         return $con -> query($sql);
     }
 

@@ -179,7 +179,6 @@ if($_SESSION['username'] !== 'admin'){
                     $vendor_query = viewVendorByID($con, $vendorid);
                     $vendor = $vendor_query -> fetch_array();
 
-                    $count +=1;
                     ?>
                     <tr>
                     <td><?php echo $order["orderID"];?></td>
@@ -192,6 +191,7 @@ if($_SESSION['username'] !== 'admin'){
                     <td><?php echo $order["orderStatus"];?></td>
                     </tr>
             <?php
+                                $count +=1;
                 }
             ?>
           </tbody>

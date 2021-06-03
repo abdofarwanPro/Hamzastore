@@ -2,14 +2,16 @@
 
 require_once 'includes/db.php';
 require_once 'includes/resources.php';
+require_once ("includes/auth_session.php");
+$sessionUser = $_SESSION['sessionId'];
 
 // get ?orderid=# from get request
 if(isset($_GET['orderid'])){
     $orderid = htmlentities(strip_tags($_GET['orderid']));
-}
-    // get order info
-    $order_query = viewOrderByID($con, $orderid);
-    $order = $order_query -> fetch_array();
+        // get order info
+        $order_query = viewOrderByID($con, $orderid);
+        $order = $order_query -> fetch_array();
+    if ($sessionUser == $order["customerID"]) {
     $productid = $order["facemaskID"];
     $userid = $order["customerID"];
 
@@ -24,14 +26,17 @@ if(isset($_GET['orderid'])){
     // get vendor info from order
     $vendor_query = viewVendorByID($con, $vendorid);
     $vendor = $vendor_query -> fetch_array();
-?>
+} else {
+    header("Location: customer.php?error=accessdenied");
+}
+}
+?> 
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <!-- Custom styles for this template -->
   <link href="css/shop-homepage.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
 <link href="css/view.css" rel="stylesheet" />
-
 <div class="page-content container">
     <div class="page-header text-blue-d2">
         <h1 class="page-title text-secondary-d1">

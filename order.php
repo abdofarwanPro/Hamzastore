@@ -10,6 +10,8 @@ $userid = getvalues("userid");
 $query = viewProductID($con, $productid);
 $a = $query -> fetch_array();
 $productprice = $a["facemaskPrice"];
+$newFacemaskQuantity = $a["facemaskQuantity"] - $quantity;
+
 
 if ($productprice * $quantity > 50) {
     $ordertotal = $productprice * $quantity * 0.9;
@@ -26,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $query = "INSERT INTO orders (customerID,facemaskID,quantity,orderTotal,discount) VALUES (?,?,?,?,?)";
         $stmt = $con -> prepare($query);
         $stmt -> bind_param("sssss", $userid,$productid,$quantity,$ordertotal,$discount);
+        decreaseFaceMaskQuantity($con, $newFacemaskQuantity, $productid);
         header("Location: customer.php?success=orderadded");
         $stmt -> execute();
         $stmt -> close();

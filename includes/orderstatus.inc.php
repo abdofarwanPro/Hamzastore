@@ -9,6 +9,6 @@ if(isset($_GET['orderid'])){
     $orderStatus = "Paid";
 
 }
-    updateStatus($con,$orderID, $orderStatus);
+    updateOrderStatus($con,$orderID, $orderStatus);
     header("Location: ../invoice.php?orderid=$orderID");
 ?>  
